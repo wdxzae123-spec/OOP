@@ -1,79 +1,59 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.basket.ProductBasket;
-import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.*;
 
 public class App {
     public static void main(String[] args) {
-        /** Создаём несколько товаров
+        /** Создаём товары разных типов
          *
          */
-        Product bread = new Product("Хлеб", 50);
-        Product milk = new Product("Молоко", 80);
-        Product eggs = new Product("Яйца", 120);
-        Product cheese = new Product("Сыр", 200);
-        Product butter = new Product("Масло", 150);
-        Product extra = new Product("Шоколад", 90); // для проверки переполнения
+        Product bread = new SimpleProduct("Хлеб", 50);
+        Product milk = new DiscountedProduct("Молоко", 80, 10);   // 10% скидки
+        Product eggs = new DiscountedProduct("Яйца", 120, 5);     // 5%
+        Product cheese = new FixPriceProduct("Сыр");              // фиксированная цена 199
+        Product butter = new SimpleProduct("Масло", 150);
+        Product chocolate = new FixPriceProduct("Шоколад");       // фиксированная цена 199
 
-        /** Создаём корзину
-         *
-         */
         ProductBasket basket = new ProductBasket();
 
-        /** 1. Добавление продуктов
+        /** Добавляем товары (5 + 1 лишний — проверка переполнения)
          *
          */
         basket.addProduct(bread);
         basket.addProduct(milk);
         basket.addProduct(eggs);
-
-        /** 2. Попытка добавить продукт в заполненную корзину (заполним до 5)
-         *
-         */
         basket.addProduct(cheese);
         basket.addProduct(butter);
-        basket.addProduct(extra);
-
-        /** 3. Печать содержимого корзины
+        basket.addProduct(chocolate);
+        /** должно появиться "Невозможно добавить продукт"
          *
          */
-        System.out.println("=== Содержимое корзины ===");
+
+        /** Печать
+         *
+         */
+        System.out.println("=== Корзина ===");
         basket.printContents();
 
-        /** 4. Стоимость корзины
+        /** Стоимость
          *
          */
-        System.out.println("Стоимость корзины: " + basket.getTotalCost());
+        System.out.println("Общая стоимость: " + basket.getTotalCost());
 
-        /** 5. Поиск товара, который есть
+        /** Поиск
          *
          */
-        System.out.println("Есть ли Молоко? " + basket.contains("Молоко"));
+        System.out.println("Молоко есть? " + basket.contains("Молоко"));
+        System.out.println("Шоколад есть? " + basket.contains("Шоколад")); // нет, не влез
 
-        /** 6. Поиск товара, которого нет
-         *
-         */
-        System.out.println("Есть ли Шоколад? " + basket.contains("Шоколад"));
-
-        /** 7. Очистка корзины
+        /** Очистка и проверка пустой корзины
          *
          */
         basket.clear();
         System.out.println("\n=== После очистки ===");
-
-        /** 8. Печать пустой корзины
-         *
-         */
         basket.printContents();
-
-        /** 9. Стоимость пустой корзины
-         *
-         */
-        System.out.println("Стоимость пустой корзины: " + basket.getTotalCost());
-
-        /** 10. Поиск товара в пустой корзине
-         *
-         */
-        System.out.println("Есть ли Хлеб? " + basket.contains("Хлеб"));
+        System.out.println("Стоимость: " + basket.getTotalCost());
+        System.out.println("Хлеб есть? " + basket.contains("Хлеб"));
     }
 }
