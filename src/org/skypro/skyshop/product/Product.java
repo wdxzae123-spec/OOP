@@ -6,6 +6,9 @@ public abstract class Product implements Searchable {
     private final String name;
 
     public Product(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Название продукта не может быть пустым или состоять только из пробелов");
+        }
         this.name = name;
     }
 
@@ -16,9 +19,6 @@ public abstract class Product implements Searchable {
 
     @Override
     public String getSearchTerm() {
-        /** Поиск по имени товара
-         *
-         */
         return getName();
     }
 
@@ -26,10 +26,6 @@ public abstract class Product implements Searchable {
     public String getContentType() {
         return "PRODUCT";
     }
-
-    /** getStringRepresentation() наследуется из интерфейса (default)
-     *
-     */
 
     /** Абстрактные и виртуальные методы товара
      *
@@ -41,11 +37,6 @@ public abstract class Product implements Searchable {
 
     @Override
     public String toString() {
-        /** Оставляем прежнюю логику для вывода в корзине
-         * (у подклассов она переопределена)
-         *
-        */
         return name + ": " + getPrice();
     }
 }
-
