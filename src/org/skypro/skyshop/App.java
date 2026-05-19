@@ -8,10 +8,11 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) {
-        /** Проверки конструкторов (без изменений)
+        /** Проверки конструкторов (как раньше)
          *
          */
         System.out.println("=== Проверка создания продуктов ===");
@@ -55,13 +56,13 @@ public class App {
         basket.addProduct(eggs);
         basket.addProduct(cheese);
         basket.addProduct(butter);
-        basket.addProduct(chocolate); // теперь добавится без проблем
+        basket.addProduct(chocolate);
 
         System.out.println("\n=== Корзина до удаления ===");
         basket.printContents();
 
-        /**Демонстрация удаления
-         * Удалим существующий продукт "Хлеб"
+        /** Удаление существующего продукта
+         *
          */
         List<Product> removed = basket.removeProductsByName("Хлеб");
         if (!removed.isEmpty()) {
@@ -73,7 +74,7 @@ public class App {
         System.out.println("\n=== Корзина после удаления 'Хлеб' ===");
         basket.printContents();
 
-        /** Удалим несуществующий продукт
+        /** Удаление несуществующего продукта
          *
          */
         List<Product> removed2 = basket.removeProductsByName("Гречка");
@@ -102,9 +103,12 @@ public class App {
         engine.add(article3);
 
         System.out.println("\n=== Поиск: 'сыр' ===");
-        List<Searchable> searchResults = engine.search("сыр");
-        for (Searchable item : searchResults) {
-            System.out.println(item.getStringRepresentation());
+        Map<String, Searchable> searchResults = engine.search("сыр");
+        /** TreeMap автоматически выдаёт записи, отсортированные по ключу (имени)
+         *
+         */
+        for (Map.Entry<String, Searchable> entry : searchResults.entrySet()) {
+            System.out.println(entry.getValue().getStringRepresentation());
         }
 
         System.out.println("\n=== Поиск наиболее подходящего элемента ===");
