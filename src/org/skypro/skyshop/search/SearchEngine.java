@@ -2,67 +2,53 @@ package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
 
-public class SearchEngine {
-    private final Searchable[] items;
-    private int size;
+import java.util.ArrayList;
+import java.util.List;
 
-    public SearchEngine(int capacity) {
-        this.items = new Searchable[capacity];
-        this.size = 0;
+public class SearchEngine {
+    private final List<Searchable> items;
+
+    public SearchEngine() {
+        this.items = new ArrayList<>();
     }
 
     public void add(Searchable item) {
-        if (size < items.length) {
-            items[size] = item;
-            size++;
-        } else {
-            System.out.println("Невозможно добавить объект в SearchEngine – массив заполнен");
-        }
+        items.add(item);
     }
 
-    public Searchable[] search(String query) {
-        Searchable[] results = new Searchable[5];
-        int found = 0;
-        for (int i = 0; i < size; i++) {
-            if (items[i].getSearchTerm().contains(query)) {
-                results[found] = items[i];
-                found++;
-                if (found == 5) {
-                    break;
-                }
+    /**
+     * Возвращает все объекты, чей поисковый термин содержит указанную строку.
+     */
+    public List<Searchable> search(String query) {
+        List<Searchable> results = new ArrayList<>();
+        for (Searchable item : items) {
+            if (item.getSearchTerm().contains(query)) {
+                results.add(item);
             }
         }
         return results;
     }
 
     /**
-     * Ищет объект Searchable с максимальным количеством неперекрывающихся вхождений search.
-     * @param search поисковая строка
-     * @return наиболее подходящий объект
-     * @throws BestResultNotFound если ни в одном searchTerm нет вхождений search
+     * Ищет объект с максимальным количеством неперекрывающихся вхождений search.
+     * @throws BestResultNotFound если ни одного вхождения не найдено
      */
     public Searchable findBestMatch(String search) throws BestResultNotFound {
         Searchable best = null;
         int maxCount = 0;
-
-        for (int i = 0; i < size; i++) {
-            String term = items[i].getSearchTerm();
-            int count = countOccurrences(term, search);
+        for (Searchable item : items) {
+            int count = countOccurrences(item.getSearchTerm(), search);
             if (count > maxCount) {
                 maxCount = count;
-                best = items[i];
+                best = item;
             }
         }
-
         if (maxCount == 0) {
             throw new BestResultNotFound(search);
         }
         return best;
     }
 
-    /** Вспомогательный метод для подсчёта неперекрывающихся вхождений подстроки
-     *
-     */
     private int countOccurrences(String str, String substring) {
         if (str == null || substring == null || substring.isEmpty()) {
             return 0;
