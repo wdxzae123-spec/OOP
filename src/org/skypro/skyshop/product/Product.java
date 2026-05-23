@@ -39,4 +39,19 @@ public abstract class Product implements Searchable {
     public String toString() {
         return name + ": " + getPrice();
     }
+    /** equals и hashCode на основе имени
+     *
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return name.equals(product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
