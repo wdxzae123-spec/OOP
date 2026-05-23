@@ -1,9 +1,7 @@
 package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SearchEngine {
     private final List<Searchable> items;
@@ -17,16 +15,17 @@ public class SearchEngine {
     }
 
     /**
-     * Возвращает все объекты, чей поисковый термин содержит указанную строку.
+     * Возвращает все подходящие результаты, отсортированные по имени.
+     * @return TreeMap с ключом – имя объекта, значением – сам объект Searchable
      */
-    public List<Searchable> search(String query) {
-        List<Searchable> results = new ArrayList<>();
+    public Map<String, Searchable> search(String query) {
+        Map<String, Searchable> resultMap = new TreeMap<>();
         for (Searchable item : items) {
             if (item.getSearchTerm().contains(query)) {
-                results.add(item);
+                resultMap.put(item.getName(), item);
             }
         }
-        return results;
+        return resultMap;
     }
 
     /**
