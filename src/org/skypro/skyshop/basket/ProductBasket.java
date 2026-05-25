@@ -32,7 +32,8 @@ public class ProductBasket {
             return;
         }
 
-        // Печать всех товаров
+        /** Печать всех товаров
+         */
         productMap.values().stream()
                 .flatMap(Collection::stream)
                 .forEach(System.out::println);

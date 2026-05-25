@@ -22,7 +22,6 @@ public class SearchEngine {
             if (len1 != len2) {
                 return Integer.compare(len2, len1);
                 /** более длинные — первыми
-                 *
                  */
             }
             return s1.getName().compareTo(s2.getName());
