@@ -16,7 +16,8 @@ public class Article implements Searchable {
         return title + "\n" + text;
     }
 
-    /** Реализация Searchable
+    /**
+     * Реализация Searchable
      *
      */
     @Override
@@ -37,7 +38,20 @@ public class Article implements Searchable {
         return title;
     }
 
-    /** getStringRepresentation() можно не переопределять – подойдёт default-реализация
+    /**
+     * equals и hashCode на основе имени
      *
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return title.equals(article.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return title.hashCode();
+    }
 }

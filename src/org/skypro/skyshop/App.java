@@ -8,11 +8,11 @@ import org.skypro.skyshop.search.SearchEngine;
 import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class App {
     public static void main(String[] args) {
-        /** Проверки конструкторов (как раньше)
+        /** Проверки конструкторов (как и раньше)
          *
          */
         System.out.println("=== Проверка создания продуктов ===");
@@ -61,7 +61,7 @@ public class App {
         System.out.println("\n=== Корзина до удаления ===");
         basket.printContents();
 
-        /** Удаление существующего продукта
+        /** Удаление
          *
          */
         List<Product> removed = basket.removeProductsByName("Хлеб");
@@ -74,9 +74,6 @@ public class App {
         System.out.println("\n=== Корзина после удаления 'Хлеб' ===");
         basket.printContents();
 
-        /** Удаление несуществующего продукта
-         *
-         */
         List<Product> removed2 = basket.removeProductsByName("Гречка");
         if (removed2.isEmpty()) {
             System.out.println("\nСписок удалённых пуст");
@@ -102,13 +99,15 @@ public class App {
         engine.add(article2);
         engine.add(article3);
 
-        System.out.println("\n=== Поиск: 'сыр' ===");
-        Map<String, Searchable> searchResults = engine.search("сыр");
-        /** TreeMap автоматически выдаёт записи, отсортированные по ключу (имени)
+        /** Попробуем добавить дубликат (продукт с тем же именем Хлеб) – он не добавится
          *
          */
-        for (Map.Entry<String, Searchable> entry : searchResults.entrySet()) {
-            System.out.println(entry.getValue().getStringRepresentation());
+        engine.add(new SimpleProduct("Хлеб", 60));
+
+        System.out.println("\n=== Поиск: 'сыр' ===");
+        Set<Searchable> searchResults = engine.search("сыр");
+        for (Searchable item : searchResults) {
+            System.out.println(item.getStringRepresentation());
         }
 
         System.out.println("\n=== Поиск наиболее подходящего элемента ===");

@@ -1,13 +1,14 @@
 package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
+
 import java.util.*;
 
 public class SearchEngine {
-    private final List<Searchable> items;
+    private final Set<Searchable> items;
 
     public SearchEngine() {
-        this.items = new ArrayList<>();
+        this.items = new HashSet<>();
     }
 
     public void add(Searchable item) {
@@ -15,23 +16,31 @@ public class SearchEngine {
     }
 
     /**
-     * Возвращает все подходящие результаты, отсортированные по имени.
-     * @return TreeMap с ключом – имя объекта, значением – сам объект Searchable
+     * Возвращает отсортированный набор всех найденных объектов, удовлетворяющих запросу.
+     * Сортировка: сначала по убыванию длины имени, затем по алфавиту.
      */
-    public Map<String, Searchable> search(String query) {
-        Map<String, Searchable> resultMap = new TreeMap<>();
+    public Set<Searchable> search(String query) {
+        /** Компаратор: сначала сравниваем длину имени (по убыванию), потом лексикографически
+         *
+         */
+        Comparator<Searchable> comparator = (s1, s2) -> {
+            int len1 = s1.getName().length();
+            int len2 = s2.getName().length();
+            if (len1 != len2) {
+                return Integer.compare(len2, len1); // более длинные имена — в начало
+            }
+            return s1.getName().compareTo(s2.getName());
+        };
+
+        Set<Searchable> results = new TreeSet<>(comparator);
         for (Searchable item : items) {
             if (item.getSearchTerm().contains(query)) {
-                resultMap.put(item.getName(), item);
+                results.add(item);
             }
         }
-        return resultMap;
+        return results;
     }
 
-    /**
-     * Ищет объект с максимальным количеством неперекрывающихся вхождений search.
-     * @throws BestResultNotFound если ни одного вхождения не найдено
-     */
     public Searchable findBestMatch(String search) throws BestResultNotFound {
         Searchable best = null;
         int maxCount = 0;
